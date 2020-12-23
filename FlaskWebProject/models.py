@@ -8,7 +8,8 @@ from werkzeug import secure_filename
 from flask import flash
 
 blob_container = app.config['BLOB_CONTAINER']
-blob_service = BlockBlobService(account_name=app.config['BLOB_ACCOUNT'], account_key=app.config['BLOB_STORAGE_KEY'])
+storage_url = "https://{}.blob.core.windows.net/".format(app.config['BLOB_ACCOUNT'])
+blob_service = BlobServiceClient(account_url=storage_url, credential=app.config['BLOB_STORAGE_KEY'])
 
 def id_generator(size=32, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -52,14 +53,16 @@ class Post(db.Model):
         self.user_id = userId
 
         if file:
-            filename = secure_filename(file.filename);
-            fileextension = filename.rsplit('.',1)[1];
-            Randomfilename = id_generator();
-            filename = Randomfilename + '.' + fileextension;
+            filename = secure_filename(file.filename)
+            fileExtension = filename.rsplit('.', 1)[1]
+            randomFilename = str(uuid.uuid1())
+            filename = randomFilename + '.' + fileExtension
             try:
-                blob_service.create_blob_from_stream(blob_container, filename, file)
-                if(self.image_path):
-                    blob_service.delete_blob(blob_container, self.image_path)
+                blob_client = blob_service.get_blob_client(container=blob_container, blob=filename)
+                blob_client.upload_blob(file)
+                if self.image_path:
+                    blob_client = blob_service.get_blob_client(container=blob_container, blob=self.image_path)
+                    blob_client.delete_blob()
             except Exception:
                 flash(Exception)
             self.image_path =  filename
