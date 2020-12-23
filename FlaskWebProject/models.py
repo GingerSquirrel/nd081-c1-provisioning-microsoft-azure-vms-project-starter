@@ -6,6 +6,7 @@ from azure.storage.blob import BlockBlobService
 import string, random
 from werkzeug import secure_filename
 from flask import flash
+import logging
 
 blob_container = app.config['BLOB_CONTAINER']
 storage_url = "https://{}.blob.core.windows.net/".format(app.config['BLOB_ACCOUNT'])
