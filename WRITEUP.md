@@ -11,6 +11,12 @@ App service (PaaS) is cheaper than VMs (IaaS), easier to scale, requires less ma
 
 VMs require regular manual updates to the underlying OS whereas the App Service's OS is maintained by Microsoft.
 
+Costs - App Service is cheaper
+Scalability - App service is scaled easier as it has a built in load balancer
+Availabilty - Both have very high availability.
+Workflow - App service has deployment slots, both work with various devops processes.
+
+
 ### Assess app changes that would change your decision.
 
 *Detail how the app and any other needs would have to change for you to change your decision in the last section.* 
