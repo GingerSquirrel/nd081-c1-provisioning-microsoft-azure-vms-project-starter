@@ -56,7 +56,7 @@ class Post(db.Model):
         if file:
             filename = secure_filename(file.filename)
             fileExtension = filename.rsplit('.', 1)[1]
-            randomFilename = str(uuid.uuid1())
+            randomFilename = id_generator()
             filename = randomFilename + '.' + fileExtension
             try:
                 blob_client = blob_service.get_blob_client(container=blob_container, blob=filename)
